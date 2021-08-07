@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
-
-
 import '../consonants.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -120,9 +118,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         if(formkeyReg.currentState.validate()){
                           print('validate');
                           print(_emailReg.text);
-                           await PostReg();
-                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(' Account has been created successfully , Login Now !')));
-                          Navigator.pushNamed(context, LoginScreen.id);
+                           try{
+                             await PostReg().then((statusCode) {
+                               print('Status code of creating user is $statusCode');
+                               if(statusCode.toString().contains('20')){
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(' Account has been created successfully , Login Now !')));
+                                 Navigator.pushNamed(context, LoginScreen.id);
+
+                               }else{
+                                 modelHud.ChangeisLoading(false);
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                     content: Text('Email and Password don\'t match,Kindly Check your id and password again')));
+                               }
+
+                             });
+                           }catch(e){
+                             modelHud.ChangeisLoading(false);
+                             print(e.toString());
+                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                 content: Text('Kindly Check your password (6 letters or numbers at least ),also your email format ! ')));
+                           }
+
+                          modelHud.ChangeisLoading(false);
                         }else{
                           modelHud.ChangeisLoading(false);
                           setState(() {
@@ -167,7 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-   PostReg()async{
+   Future PostReg()async{
     Map paramaeter= {
       KEmail:_emailReg.text,
       KPassword:_passReg.text,
@@ -180,6 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         //RegistrationModel(_emailReg.text,_passReg.text,_nameReg.text).ToJson()
     );
     print(user.data);
+    return user.statusCode;
   }
 }
 

@@ -1,7 +1,5 @@
 import 'package:amit_ecommerce/Provider/Model_HudProvider.dart';
 import 'package:amit_ecommerce/Screens/login_screen.dart';
-import 'package:amit_ecommerce/Screens/user_categories.dart';
-import 'package:amit_ecommerce/models/UserRegisterAndLoginModel.dart';
 import 'package:amit_ecommerce/reusable_widgets/TextFormField_Widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -52,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: Colors.transparent,
                         child: Image(image: AssetImage('assets/images/AmitT.png'),)),
                   ),
+
                   Padding(
                     padding:  EdgeInsets.symmetric(vertical: heightMedia*.03,horizontal: widthMedia*.05),
                     child: EmailAndPassField(
